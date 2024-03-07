@@ -106,7 +106,7 @@ version bumps multiple times. If there are multiple version bumps, only mention 
   ];
 }
 
-export function flattenChunks(allChunks: Uint8Array[]) {
+function flattenChunks(allChunks: Uint8Array[]) {
   const flatArray = new Uint8Array(allChunks.reduce((a, b) => a + b.length, 0));
   for (let i = 0, offset = 0; i < allChunks.length; i++) {
     flatArray.set(allChunks[i], offset);
