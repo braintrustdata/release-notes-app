@@ -1,6 +1,6 @@
 import OpenAI from "openai";
 import { OpenAIStream, StreamingTextResponse } from "ai";
-import { Span, initLogger, wrapOpenAI } from "braintrust";
+import { Span, initLogger, wrapOpenAI, loadPrompt } from "braintrust";
 import { Octokit } from "@octokit/rest";
 import { GetResponseTypeFromEndpointMethod } from "@octokit/types";
 import { ChatCompletionMessageParam } from "openai/resources/index.mjs";
@@ -17,6 +17,7 @@ const logger = initLogger({
 const openai = wrapOpenAI(
   new OpenAI({
     apiKey: process.env.OPENAI_API_KEY!,
+    baseURL: process.env.OPENAI_API_BASE_URL,
   })
 );
 
@@ -82,30 +83,6 @@ async function getCommits(
   return processedCommits;
 }
 
-function serializeCommit(info: CommitInfo): string {
-  return `SHA: ${info.sha}
-DATE: ${info.commit.author?.date}
-MESSAGE: ${info.commit.message.substring(0, 2048)}`;
-}
-
-function generatePrompt(commits: CommitInfo[]): ChatCompletionMessageParam[] {
-  return [
-    {
-      role: "system",
-      content: `You are an expert technical writer who generates release notes for the Braintrust SDK.
-You will be provided a list of commits, including their message, author, and date, and you will generate
-a full list of release notes, in markdown list format, across the commits. You should make sure to include
-some information about each commit, without the commit sha, url, or author info. However, do not mention
-version bumps multiple times. If there are multiple version bumps, only mention the latest one.`,
-    },
-    {
-      role: "user",
-      content:
-        "Commits: \n" + commits.map((c) => serializeCommit(c)).join("\n\n"),
-    },
-  ];
-}
-
 function flattenChunks(allChunks: Uint8Array[]) {
   const flatArray = new Uint8Array(allChunks.reduce((a, b) => a + b.length, 0));
   for (let i = 0, offset = 0; i < allChunks.length; i++) {
@@ -129,11 +106,16 @@ export async function POST(req: Request) {
         }
       );
 
+      const prompt = await loadPrompt({
+        projectName: "Release notes prod",
+        slug: "release-notes",
+      });
+
       // Request the OpenAI API for the response based on the prompt
       const response = await openai.chat.completions.create({
-        model: "gpt-3.5-turbo-0125",
+        ...prompt.build({ project: "Braintrust", commits }),
         stream: true,
-        messages: generatePrompt(commits),
+        seed: 123,
       });
 
       // Convert the response into a friendly text-stream

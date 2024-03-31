@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 
 export function ReleaseNotes({
   onSubmit,
@@ -16,8 +16,18 @@ export function ReleaseNotes({
   onSubmit: (startDate: string, endDate: string) => void;
   notes?: string;
 }) {
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
+  const lastSeveralMondays = useMemo(() => {
+    const today = new Date();
+    const day = today.getDay();
+    const diff = today.getDate() - day + (day === 0 ? -6 : 1); // adjust when day is sunday
+    const lastMonday = new Date(today.setDate(diff));
+    const mondays = [];
+    for (let i = 0; i < 10; i++) {
+      mondays.push(new Date(lastMonday.setDate(lastMonday.getDate() - 7)));
+    }
+    return mondays;
+  }, []);
+  const dateRef = useRef<HTMLSelectElement>(null);
   return (
     <div className="bg-gray-50 dark:bg-gray-950 py-12 w-full">
       <div className="w-full mx-auto px-4">
@@ -29,32 +39,25 @@ export function ReleaseNotes({
             <div className="grid gap-2">
               <div className="flex items-center gap-2">
                 <Label htmlFor="start-date">Start Date</Label>
-                <Input
-                  id="start-date"
-                  type="date"
-                  value={startDate}
-                  onChange={(e) => setStartDate(e.target.value)}
-                />
-              </div>
-              <div className="flex items-center gap-2">
-                <Label htmlFor="end-date">End Date</Label>
-                <Input
-                  id="end-date"
-                  type="date"
-                  value={endDate}
-                  onChange={(e) => setEndDate(e.target.value)}
-                />
+                <select className="bg-gray-50 dark:bg-gray-950" ref={dateRef}>
+                  {lastSeveralMondays.map((date) => (
+                    <option key={date.toISOString()} value={date.toISOString()}>
+                      {date.toDateString()}
+                    </option>
+                  ))}
+                </select>
               </div>
             </div>
             <div className="grid gap-2">
               <Label htmlFor="release-notes">
                 Release Notes
                 <span className="text-sm font-normal">
+                  {" "}
                   (in markdown format)
                 </span>
               </Label>
               <div
-                className="min-h-[500px] resize-none whitespace-pre-wrap"
+                className="min-h-[500px] resize-none whitespace-pre-wrap font-mono text-sm mt-4"
                 id="release-notes"
               >
                 {notes || "No release notes generated yet."}
@@ -64,9 +67,18 @@ export function ReleaseNotes({
               variant="outline"
               onClick={(e) => {
                 e.preventDefault();
-                onSubmit(startDate, endDate);
+                const startDate = dateRef.current?.value;
+                if (!startDate) return;
+                onSubmit(
+                  startDate,
+                  // to the following sunday
+                  new Date(
+                    new Date(startDate).setDate(
+                      new Date(startDate).getDate() + 6
+                    )
+                  ).toISOString()
+                );
               }}
-              disabled={!startDate || !endDate}
             >
               Generate
             </Button>
