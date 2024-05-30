@@ -27,8 +27,8 @@ dependencies:
     specifier: ^3.0.16
     version: 3.0.16(react@18.2.0)(solid-js@1.8.16)(svelte@4.2.12)(vue@3.4.21)(zod@3.22.4)
   braintrust:
-    specifier: ^0.0.114
-    version: 0.0.114
+    specifier: ^0.0.131
+    version: 0.0.131
   class-variance-authority:
     specifier: ^0.7.0
     version: 0.7.0
@@ -95,6 +95,13 @@ packages:
     resolution: {integrity: sha512-1Yjs2SvM8TflER/OD3cOjhWWOZb58A2t7wpE2S9XfBYTiIl+XFhQG2bjy4Pu1I+EAlCNUzRDYDdFwFYUKvXcIA==}
     engines: {node: '>=0.10.0'}
 
+  /@ai-sdk/provider@0.0.6:
+    resolution: {integrity: sha512-kiPqIsSnUimckaUn87WepxfjPNdy8SXlPP7P6yWuG3e1NmyFHcyuH6EBBZxXLmu0oZtkb+QEeP3UDWGSc+wwKQ==}
+    engines: {node: '>=18'}
+    dependencies:
+      json-schema: 0.4.0
+    dev: false
+
   /@alloc/quick-lru@5.2.0:
     resolution: {integrity: sha512-UrcABB+4bUrFABwbluTIBErXwvbsU/V7TZWfmbgJfbkwiBuziS9gxdODUyuiecfdGQ85jglMW6juS3+z5TsKLw==}
     engines: {node: '>=10'}
@@ -149,10 +156,11 @@ packages:
       to-fast-properties: 2.0.0
     dev: false
 
-  /@braintrust/core@0.0.26:
-    resolution: {integrity: sha512-Xtqr9MG1APkA5rGpryER90kAJrBj6OdaSoDY4G7l/4ivOX5s4kIrVnGKzwgsUFp+R3lmzX7FNBb5RLP6p3DePw==}
+  /@braintrust/core@0.0.37:
+    resolution: {integrity: sha512-W7CyMtB0pX30Nm9cCkMs8u8WfSWIwgfiQNBaaE2pVzGpZR84y1OiFB4NBmiATCEDb8F0fALk84cVh34SQXddCQ==}
     dependencies:
       '@asteasolutions/zod-to-openapi': 6.4.0(zod@3.22.4)
+      uuid: 9.0.1
       zod: 3.22.4
     dev: false
 
@@ -563,6 +571,10 @@ packages:
 
   /@next/env@14.1.0:
     resolution: {integrity: sha512-Py8zIo+02ht82brwwhTg36iogzFqGLPXlRGKQw5s+qP/kMNc4MAyDeEwBKDijk6zTIbegEgu8Qy7C1LboslQAw==}
+    dev: false
+
+  /@next/env@14.2.3:
+    resolution: {integrity: sha512-W7fd7IbkfmeeY2gXrzJYDx8D2lWKbVoTIj1o1ScPHNzvp30s1AuoEFSdr39bC5sjxJaxTtq3OTCZboNp0lNWHA==}
     dev: false
 
   /@next/eslint-plugin-next@12.3.4:
@@ -1393,14 +1405,17 @@ packages:
     dependencies:
       fill-range: 7.0.1
 
-  /braintrust@0.0.114:
-    resolution: {integrity: sha512-PIzQlyMO52yHcXYnN9glVc93zIUBtMugXsTpyAIBvU4LaWaYZ5gZFaOqAiRogs9COHxMY5gSyhpGMg6DKwDWgw==}
+  /braintrust@0.0.131:
+    resolution: {integrity: sha512-VQyr5NdeR4Wysioav7jZDAqBOkKUSjDTZ3otwTiDviPkIlOPUxRWICqlNBfwfv+y1pxkYEv30IHbTF3YMw8i9g==}
     hasBin: true
     dependencies:
-      '@braintrust/core': 0.0.26
+      '@ai-sdk/provider': 0.0.6
+      '@braintrust/core': 0.0.37
+      '@next/env': 14.2.3
       argparse: 2.0.1
       chalk: 4.1.2
       cli-progress: 3.12.0
+      dotenv: 16.4.5
       esbuild: 0.18.20
       graceful-fs: 4.2.11
       minimatch: 9.0.3
@@ -1674,6 +1689,11 @@ packages:
     dependencies:
       no-case: 3.0.4
       tslib: 2.6.2
+    dev: false
+
+  /dotenv@16.4.5:
+    resolution: {integrity: sha512-ZmdL2rui+eB2YwhsWzjInR8LldtZHGDoQ1ugH85ppHKwpUHL7j7rN0Ti9NCnGiQbhaZ11FpR+7ao1dNsmduNUg==}
+    engines: {node: '>=12'}
     dev: false
 
   /eastasianwidth@0.2.0:
@@ -2761,6 +2781,10 @@ packages:
 
   /json-schema-traverse@0.4.1:
     resolution: {integrity: sha512-xbbCH5dCYU5T8LcEhhuh7HJ88HXuW3qsI3Y0zOZFKfZEHcpWiHU/Jxzk629Brsab/mMiHQti9wMP+845RPe3Vg==}
+
+  /json-schema@0.4.0:
+    resolution: {integrity: sha512-es94M3nTIfsEPisRafak+HDLfHXnKBhV3vU5eqPcS3flIWqcxJWgXHXiey3YrpaNsanY5ei1VoYEbOzijuq9BA==}
+    dev: false
 
   /json-stable-stringify-without-jsonify@1.0.1:
     resolution: {integrity: sha512-Bdboy+l7tA3OGW6FjyFHWkP5LuByj1Tk33Ljyq0axyzdk9//JSi2u3fP1QSmd1KNwq6VOKYGlAu87CisVir6Pw==}

@@ -4,10 +4,8 @@
  * @see https://v0.dev/t/MLJszWTM01G
  */
 import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { useMemo, useRef, useState } from "react";
+import { useMemo, useRef } from "react";
 
 export function ReleaseNotes({
   onSubmit,
