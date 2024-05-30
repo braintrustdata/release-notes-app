@@ -11,7 +11,7 @@ export const runtime = "edge";
 
 const logger = initLogger({
   projectName: "Release notes prod",
-  // apiKey: process.env.BRAINTRUST_API_KEY,
+  apiKey: process.env.BRAINTRUST_API_KEY,
 });
 
 const openai = wrapOpenAI(
